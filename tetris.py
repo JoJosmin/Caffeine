@@ -3,7 +3,7 @@ from iris_status import get_iris_status
 import cv2
 import numpy as np
 from random import choice
-import time
+import tkinter as tk
 
 SPEED = 1 #스피드 조절 변수
 
@@ -74,16 +74,13 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
 
     dummy = cv2.putText(dummy, "A - move left", (45, 200), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
     dummy = cv2.putText(dummy, "D - move right", (45, 225), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "S - move down", (45, 250), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "W - hard drop", (45, 275), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "J - rotate left", (45, 300), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
     dummy = cv2.putText(dummy, "L - rotate right", (45, 325), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "I - hold", (45, 350), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
+    dummy = cv2.putText(dummy, "Backspace - quit", (45, 350), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
 
     cv2.namedWindow("Tetris", cv2.WINDOW_NORMAL)
 
-    # 창의 크기 조정
-    cv2.resizeWindow("Tetris", 1600, 900)
+    # 창을 전체 화면으로 설정
+    cv2.setWindowProperty("Tetris", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
     cv2.imshow("Tetris", dummy)
     key = cv2.waitKey(int(1000/SPEED))
