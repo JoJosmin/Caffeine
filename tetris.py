@@ -133,7 +133,7 @@ if __name__ == "__main__":
                     if current_piece == "I":
                         top_left[1] += 1
                         
-            elif key == ord("j") or key == ord("l"):
+            elif key == ord("l"):
                 # Rotation mechanism
                 # arr is the array of nearby points which get rotated and pov is the indexes of the blocks within arr
                 
@@ -152,24 +152,12 @@ if __name__ == "__main__":
                 # Rotates the array and repositions the piece to where it is now
                 
                 if current_piece != "O":
-                    if key == ord("j"):
-                        arr = np.rot90(arr, -1)
-                    else:
+                    if key == ord("l"):
                         arr = np.rot90(arr)
-                    coords = arr[pov[:,0], pov[:,1]]
-            
-            elif key == ord("w"):
-                # Hard drop set to true
-                drop = True
-            elif key == ord("i"):
-                # Goes out of the loop and tells the program to switch held and current pieces
-                if flag == 0:
-                    if held_piece == "":
-                        held_piece = current_piece
                     else:
-                        switch = True
-                    flag = 2
-                    break
+                        arr = np.rot90(arr ,-1)
+                    coords = arr[pov[:,0], pov[:,1]]
+
             elif key == 8 or key == 27:
                 quit = True
                 break
@@ -185,41 +173,13 @@ if __name__ == "__main__":
             else:
                 coords = dummy.copy()
                 
-            if drop:
-                # Every iteration of the loop moves the piece down by 1 and if the piece is resting on the ground or another piece, then it stops and places it
-                
-                while not place:
-                    if np.max(coords[:,0]) != 19:
-                        # Checks if the piece is resting on something
-                        for pos in coords:
-                            if not np.array_equal(board[pos[0] + 1, pos[1]], [0, 0, 0]):
-                                place = True
-                                break
-                    else:
-                        # If the position of the piece is at the ground level, then it places
+            if np.max(coords[:,0]) != 19:
+                for pos in coords:
+                    if not np.array_equal(board[pos[0] + 1, pos[1]], [0, 0, 0]):
                         place = True
-                    
-                    if place:
                         break
-                    
-                    # Keeps going down and checking when the piece needs to be placed
-                    
-                    coords[:,0] += 1
-                    score += 1
-                    if current_piece == "I":
-                        top_left[0] += 1
-                        
-                drop = False
-            
             else:
-                # Checks if the piece needs to be placed
-                if np.max(coords[:,0]) != 19:
-                    for pos in coords:
-                        if not np.array_equal(board[pos[0] + 1, pos[1]], [0, 0, 0]):
-                            place = True
-                            break
-                else:
-                    place = True
+                place = True
                 
             if place:
                 # Places the piece where it is on the board
@@ -233,8 +193,6 @@ if __name__ == "__main__":
             # Moves down by 1
 
             coords[:,0] += 1
-            if key == ord("s"):
-                score += 1
             if current_piece == "I":
                 top_left[0] += 1
         
@@ -248,10 +206,5 @@ if __name__ == "__main__":
                 board[1:line+1] = board[:line]
                         
         if lines == 1:
-            score += 40
-        elif lines == 2:
-            score += 100
-        elif lines == 3:
-            score += 300
-        elif lines == 4:
-            score += 1200
+            score += 10
+
