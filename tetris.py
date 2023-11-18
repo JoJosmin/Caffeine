@@ -3,6 +3,7 @@ from iris_status import get_iris_status
 import cv2
 import numpy as np
 from random import choice
+import time
 
 SPEED = 1 #스피드 조절 변수
 
@@ -18,6 +19,7 @@ switch = False
 held_piece = ""
 flag = 0
 score = 0
+gameover = ""
 
 # All the tetris pieces
 next_piece = choice(["O", "I", "S", "Z", "L", "J", "T"])
@@ -65,7 +67,8 @@ def display(board, coords, color, next_info, held_info, score, SPEED):
     dummy = np.concatenate((border, left, border, dummy, border, right, border), 1)
     dummy = np.concatenate((border_, dummy, border_), 0)
     dummy = dummy.repeat(20, 0).repeat(20, 1)
-    dummy = cv2.putText(dummy, str(score), (520, 200), cv2.FONT_HERSHEY_DUPLEX, 1, [0, 0, 255], 2)
+    dummy = cv2.putText(dummy, "Score: "+ str(score), (495, 200), cv2.FONT_HERSHEY_DUPLEX, 1, [0, 0, 255], 2)
+    #dummy = cv2.putText(dummy, str(gameover), (200, 250), cv2.FONT_HERSHEY_DUPLEX, 1.5, [0, 0, 255], 2)
 
     # Instructions for the player
 
@@ -207,10 +210,10 @@ if __name__ == "__main__":
         if lines >= 1:
             score += lines*10
 
-        if score == 10:
+        if 10<= score < 30:
             SPEED = 2
-        elif score == 30:
+        elif 30 <= score < 50:
             SPEED = 3
-        elif score == 50:
+        elif score >= 50:
             SPEED = 4
 
