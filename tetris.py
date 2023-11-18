@@ -80,6 +80,11 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     dummy = cv2.putText(dummy, "L - rotate right", (45, 325), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
     dummy = cv2.putText(dummy, "I - hold", (45, 350), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
 
+    cv2.namedWindow("Tetris", cv2.WINDOW_NORMAL)
+
+    # 창의 크기 조정
+    cv2.resizeWindow("Tetris", 1600, 900)
+
     cv2.imshow("Tetris", dummy)
     key = cv2.waitKey(int(1000/SPEED))
 
