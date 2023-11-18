@@ -29,7 +29,7 @@ model = torch.hub.load('ultralytics/yolov5', 'custom', path='./best_epoch150.pt'
 model.conf = 0.3
 model.iou = 0
 resize_rate = 1
-iris_x_threshold, iris_y_threshold = 0.15, 0.26
+iris_x_threshold, iris_y_threshold = 0.10, 0.20
 cap = cv2.VideoCapture(0)
 iris_status = 'Center'
 

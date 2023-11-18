@@ -35,7 +35,7 @@ model = torch.hub.load('ultralytics/yolov5', 'custom', path='./best_epoch150.pt'
 model.conf = 0.3
 model.iou = 0
 resize_rate = 1
-iris_x_threshold, iris_y_threshold = 0.15, 0.26
+iris_x_threshold, iris_y_threshold = 0.10, 0.20
 cap = cv2.VideoCapture(0)
 iris_status = 'Center'
 board = np.uint8(np.zeros([20, 10, 3]))
@@ -89,7 +89,7 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     dummy[coords[:,0], coords[:,1]] = color
 
     right = np.uint8(np.zeros([20, 10, 3]))
-    right[next_info[0][:,0] + 2, next_info[0][:,1]] = next_info[1]
+    right[next_info[0][:,0] + 9, next_info[0][:,1]] = next_info[1]
     left = np.uint8(np.zeros([20, 10, 3]))
     left[held_info[0][:,0] + 2, held_info[0][:,1]] = held_info[1]
 
@@ -97,9 +97,9 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
 
     dummy = np.concatenate((border, left, border, dummy, border, right, border), 1)
     dummy = np.concatenate((border_, dummy, border_), 0)
-    dummy = dummy.repeat(20, 0).repeat(20, 1)
-    dummy = cv2.putText(dummy, "Score", (515, 230), font, 1, [255, 102, 51], 2)
-    dummy = cv2.putText(dummy, str(score), (520, 270), font, 1, [255, 102, 51], 2)
+    dummy = dummy.repeat(20, 0).repeat(20, 1)   
+    dummy = cv2.putText(dummy, "Score", (515, 330), font, 1, [255, 204, 153], 2)
+    dummy = cv2.putText(dummy, str(score), (520, 370), font, 1, [255, 204, 153], 2)
     dummy = cv2.putText(dummy, str(gameover), (200, 250), font, 1.5, [0, 0, 255], 3)
 
     dummy = cv2.putText(dummy, "<<", (40, 140), font, 1, [255, 102, 51], 5)
@@ -107,10 +107,10 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
 
     # Instructions for the player
 
-    dummy = cv2.putText(dummy, "look left - move left", (45, 200), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "look right - move right", (45, 225), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "blink - rotate right", (45, 250), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "BackSpace - quit", (45, 275), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "Look Left - Move Left", (45, 300), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "Look Right - Move Right", (45, 325), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "Blink - Rotate Right", (45, 350), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "BackSpace - Quit", (45, 375), font, 0.4, [255, 204, 153])
 
     cv2.namedWindow("Tetris", cv2.WINDOW_NORMAL)
 
@@ -227,10 +227,13 @@ if __name__ == "__main__":
                     else:
                         arr = np.rot90(arr ,-1)
                     coords = arr[pov[:,0], pov[:,1]]
-
+            
+            # cv2.putText(img, 'Iris Direction: {}'.format(iris_status),(10, 40), cv2.FONT_HERSHEY_COMPLEX, 1, (30, 30, 30), 2)
+            # cv2.imshow('img', img)
             if key == 8 or key == 27:
                 quit = True
                 break
+
                 
             # Checks if the piece is overlapping with other pieces or if it's outside the board, and if so, changes the position to the position before anything happened
                         
@@ -278,13 +281,13 @@ if __name__ == "__main__":
         if lines >= 1:
             score += lines*10
 
-        if 10<= score < 50:
+        if 10<= score < 20:
             SPEED = 2
-        elif 30 <= score < 100:
+        elif 20 <= score < 40:
             SPEED = 3
-        elif 150 <= score < 200:
+        elif 40 <= score < 60:
             SPEED = 4
-        elif score >= 200:
+        elif score >= 60:
             SPEED = 5 
     dummy = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
     cv2.waitKey()
