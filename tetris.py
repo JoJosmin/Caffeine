@@ -50,7 +50,7 @@ def get_info(piece):
     return coords, color
 
 
-def display(board, coords, color, next_info, held_info, score, SPEED):
+def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     # Generates the display
 
     border = np.uint8(127 - np.zeros([20, 1, 3]))
@@ -68,7 +68,7 @@ def display(board, coords, color, next_info, held_info, score, SPEED):
     dummy = np.concatenate((border_, dummy, border_), 0)
     dummy = dummy.repeat(20, 0).repeat(20, 1)
     dummy = cv2.putText(dummy, "Score: "+ str(score), (495, 200), cv2.FONT_HERSHEY_DUPLEX, 1, [0, 0, 255], 2)
-    #dummy = cv2.putText(dummy, str(gameover), (200, 250), cv2.FONT_HERSHEY_DUPLEX, 1.5, [0, 0, 255], 2)
+    dummy = cv2.putText(dummy, str(gameover), (200, 250), cv2.FONT_HERSHEY_DUPLEX, 1.5, [0, 0, 255], 2)
 
     # Instructions for the player
 
@@ -111,15 +111,17 @@ if __name__ == "__main__":
         coords, color = get_info(current_piece)
         if current_piece == "I":
             top_left = [-2, 3]
-            
+
         if not np.all(board[coords[:,0], coords[:,1]] == 0):
+            gameover = "Game over"
             break
             
         while True:
             # Shows the board and gets the key press
-            key = display(board, coords, color, next_info, held_info, score, SPEED)
+            key = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
             # Create a copy of the position
             dummy = coords.copy()
+            
         
             if key == ord("a"):
                 # Moves the piece left if it isn't against the left wall
@@ -199,7 +201,7 @@ if __name__ == "__main__":
                 top_left[0] += 1
         
         # Clears lines and also counts how many lines have been cleared and updates the score
-                
+    
         lines = 0
                 
         for line in range(20):
@@ -210,10 +212,13 @@ if __name__ == "__main__":
         if lines >= 1:
             score += lines*10
 
-        if 10<= score < 30:
+        if 10<= score < 50:
             SPEED = 2
-        elif 30 <= score < 50:
+        elif 30 <= score < 100:
             SPEED = 3
-        elif score >= 50:
+        elif 150 <= score < 200:
             SPEED = 4
-
+        elif score >= 200:
+            SPEED = 5 
+    dummy = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
+    cv2.waitKey()
