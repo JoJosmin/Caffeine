@@ -74,8 +74,8 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
 
     dummy = cv2.putText(dummy, "A - move left", (45, 200), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
     dummy = cv2.putText(dummy, "D - move right", (45, 225), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "L - rotate right", (45, 325), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "Backspace - quit", (45, 350), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
+    dummy = cv2.putText(dummy, "L - rotate right", (45, 250), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
+    dummy = cv2.putText(dummy, "BackSpace - quit", (45, 275), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
 
     cv2.namedWindow("Tetris", cv2.WINDOW_NORMAL)
 
