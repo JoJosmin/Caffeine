@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from random import choice
 
-SPEED = 1 # Controls the speed of the tetris pieces
+SPEED = 1 #스피드 조절 변수
 
 # Make a board
 
@@ -14,7 +14,6 @@ board = np.uint8(np.zeros([20, 10, 3]))
 
 quit = False
 place = False
-drop = False
 switch = False
 held_piece = ""
 flag = 0
@@ -205,6 +204,13 @@ if __name__ == "__main__":
                 lines += 1
                 board[1:line+1] = board[:line]
                         
-        if lines == 1:
-            score += 10
+        if lines >= 1:
+            score += lines*10
+
+        if score == 10:
+            SPEED = 2
+        elif score == 30:
+            SPEED = 3
+        elif score == 50:
+            SPEED = 4
 
