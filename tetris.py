@@ -97,7 +97,7 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
 
     dummy = np.concatenate((border, left, border, dummy, border, right, border), 1)
     dummy = np.concatenate((border_, dummy, border_), 0)
-    dummy = dummy.repeat(20, 0).repeat(20, 1)   
+    dummy = dummy.repeat(20, 0).repeat(20, 1)
     dummy = cv2.putText(dummy, "Score", (515, 200), font, 1, [255, 102, 51], 2)
     dummy = cv2.putText(dummy, str(score), (520, 240), font, 1, [255, 102, 51], 2)
     dummy = cv2.putText(dummy, str(gameover), (200, 250), font, 1.5, [0, 0, 255], 3)
@@ -160,10 +160,10 @@ if __name__ == "__main__":
                 break
             imgS = cv2.resize(img, (0, 0), None, resize_rate, resize_rate)
             results = yolo_process(imgS)
-
+    
             eye_list = []
             iris_list = []
-
+    
             for result in results:
                 xmin_resize = int(result['xmin'] / resize_rate)
                 ymin_resize = int(result['ymin'] / resize_rate)
@@ -206,6 +206,7 @@ if __name__ == "__main__":
             elif iris_status =="Blink":
                 # Rotation mechanism
                 # arr is the array of nearby points which get rotated and pov is the indexes of the blocks within arr
+                
                 if current_piece != "I" and current_piece != "O":
                     if coords[1,1] > 0 and coords[1,1] < 9:
                         arr = coords[1] - 1 + np.array([[[x, y] for y in range(3)] for x in range(3)])
@@ -230,7 +231,7 @@ if __name__ == "__main__":
             if key == 8 or key == 27:
                 quit = True
                 break
-            
+                
             # Checks if the piece is overlapping with other pieces or if it's outside the board, and if so, changes the position to the position before anything happened
                         
             if np.max(coords[:,0]) < 20 and np.min(coords[:,0]) >= 0:
@@ -279,12 +280,11 @@ if __name__ == "__main__":
 
         if 10<= score < 20:
             SPEED = 2
-        elif 30 <= score < 40:
+        elif 20 <= score < 40:
             SPEED = 3
-        elif 150 <= score < 60:
+        elif 40 <= score < 60:
             SPEED = 4
-        elif score >= 80:
+        elif score >= 60:
             SPEED = 5 
     dummy = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
     cv2.waitKey()
-
