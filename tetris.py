@@ -98,8 +98,8 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     dummy = np.concatenate((border, left, border, dummy, border, right, border), 1)
     dummy = np.concatenate((border_, dummy, border_), 0)
     dummy = dummy.repeat(20, 0).repeat(20, 1)
-    dummy = cv2.putText(dummy, "Score", (515, 200), font, 1, [255, 102, 51], 2)
-    dummy = cv2.putText(dummy, str(score), (520, 240), font, 1, [255, 102, 51], 2)
+    dummy = cv2.putText(dummy, "Score", (515, 230), font, 1, [255, 102, 51], 2)
+    dummy = cv2.putText(dummy, str(score), (520, 270), font, 1, [255, 102, 51], 2)
     dummy = cv2.putText(dummy, str(gameover), (200, 250), font, 1.5, [0, 0, 255], 3)
 
     dummy = cv2.putText(dummy, "<<", (40, 140), font, 1, [255, 102, 51], 5)
