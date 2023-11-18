@@ -59,13 +59,13 @@ def get_info(piece):
         color = [255, 155, 15]
     elif piece == "T":
         coords = np.array([[1, 3], [1, 4], [1, 5], [0, 4]])
-        color = [138, 41, 175]
+        color = [100, 1, 40]
     elif piece == "L":
         coords = np.array([[1, 3], [1, 4], [1, 5], [0, 5]])
         color = [2, 91, 227]
     elif piece == "J":
         coords = np.array([[1, 3], [1, 4], [1, 5], [0, 3]])
-        color = [198, 65, 33]
+        color = [200, 0, 200]
     elif piece == "S":
         coords = np.array([[1, 5], [1, 4], [0, 3], [0, 4]])
         color = [55, 15, 215]
@@ -82,8 +82,8 @@ def get_info(piece):
 def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     # Generates the display
 
-    border = np.uint8(127 - np.zeros([20, 1, 3]))
-    border_ = np.uint8(127 - np.zeros([1, 34, 3]))
+    border = np.uint8(np.array([163, 49, 12]) * np.ones([20, 1, 3])) 
+    border_ = np.uint8(np.array([163, 49, 12]) * np.ones([1, 34, 3]))  
 
     dummy = board.copy()
     dummy[coords[:,0], coords[:,1]] = color
@@ -93,19 +93,24 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     left = np.uint8(np.zeros([20, 10, 3]))
     left[held_info[0][:,0] + 2, held_info[0][:,1]] = held_info[1]
 
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
     dummy = np.concatenate((border, left, border, dummy, border, right, border), 1)
     dummy = np.concatenate((border_, dummy, border_), 0)
     dummy = dummy.repeat(20, 0).repeat(20, 1)
-    dummy = cv2.putText(dummy, "Score", (515, 200), cv2.FONT_HERSHEY_DUPLEX, 1, [0, 0, 255], 2)
-    dummy = cv2.putText(dummy, str(score), (520, 240), cv2.FONT_HERSHEY_DUPLEX, 1, [0, 0, 255], 2)
-    dummy = cv2.putText(dummy, str(gameover), (200, 250), cv2.FONT_HERSHEY_DUPLEX, 1.5, [0, 0, 255], 2)
+    dummy = cv2.putText(dummy, "Score", (515, 200), font, 1, [255, 102, 51], 2)
+    dummy = cv2.putText(dummy, str(score), (520, 240), font, 1, [255, 102, 51], 2)
+    dummy = cv2.putText(dummy, str(gameover), (200, 250), font, 1.5, [0, 0, 255], 3)
+
+    dummy = cv2.putText(dummy, "<<", (40, 140), font, 1, [255, 102, 51], 5)
+    dummy = cv2.putText(dummy, ">>", (590, 140), font, 1, [255, 102, 51], 5)
 
     # Instructions for the player
 
-    dummy = cv2.putText(dummy, "A - move left", (45, 200), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "D - move right", (45, 225), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "L - rotate right", (45, 250), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
-    dummy = cv2.putText(dummy, "BackSpace - quit", (45, 275), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
+    dummy = cv2.putText(dummy, "look left - move left", (45, 200), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "look right - move right", (45, 225), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "blink - rotate right", (45, 250), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "BackSpace - quit", (45, 275), font, 0.4, [255, 204, 153])
 
     cv2.namedWindow("Tetris", cv2.WINDOW_NORMAL)
 
@@ -198,7 +203,7 @@ if __name__ == "__main__":
                     if current_piece == "I":
                         top_left[1] += 1
                         
-            elif key == ord("l"):
+            elif iris_status =="Blink":
                 # Rotation mechanism
                 # arr is the array of nearby points which get rotated and pov is the indexes of the blocks within arr
                 
@@ -223,7 +228,7 @@ if __name__ == "__main__":
                         arr = np.rot90(arr ,-1)
                     coords = arr[pov[:,0], pov[:,1]]
 
-            elif key == 8 or key == 27:
+            if key == 8 or key == 27:
                 quit = True
                 break
                 
