@@ -6,7 +6,7 @@ import numpy as np
 from random import choice
 import tkinter as tk
 
-SPEED = 3 #스피드 조절 변수
+SPEED = 2 #스피드 조절 변수
 
 def yolo_process(img):
     yolo_results = model(img)
@@ -49,7 +49,7 @@ flag = 0
 score = 0
 gameover = ""
 
-# All the tetris pieces
+# 테트리스 블럭 구현
 next_piece = choice(["O", "I", "S", "Z", "L", "J", "T"])
 
 def get_info(piece):
@@ -103,10 +103,12 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     dummy = cv2.putText(dummy, "<<", (40, 140), font, 1, [255, 102, 51], 5)
     dummy = cv2.putText(dummy, ">>", (590, 140), font, 1, [255, 102, 51], 5)
 
-    dummy = cv2.putText(dummy, "Look Left - Move Left", (45, 300), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "Look Right - Move Right", (45, 325), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "Blink - Rotate Right", (45, 350), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "BackSpace - Quit", (45, 375), font, 0.4, [255, 204, 153])
+    # Instructions for the player
+
+    dummy = cv2.putText(dummy, "look left - move left", (45, 200), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "look right - move right", (45, 225), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "blink - rotate right", (45, 250), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "BackSpace - quit", (45, 275), font, 0.4, [255, 204, 153])
 
     cv2.namedWindow("Tetris", cv2.WINDOW_NORMAL)
 
@@ -198,7 +200,7 @@ if __name__ == "__main__":
                         top_left[1] += 1
                         
             elif iris_status =="Blink":
-                #눈을 깜빡이면 블럭이 시계방향으로 회전
+                ##눈을 깜빡이면 블럭이 시계방향으로 회전
                 #저장되어 있는 회전 모습 array 사용
                 if current_piece != "I" and current_piece != "O":
                     # 일자 블럭과, 정사각형 블럭의 경우 따로 처리 (회전 시 모양이 2개로 한정되어있기 때문)
@@ -225,7 +227,7 @@ if __name__ == "__main__":
             if key == 8 or key == 27:
                 quit = True
                 break
-     
+            
             if np.max(coords[:,0]) < 20 and np.min(coords[:,0]) >= 0:
                 if not (current_piece == "I" and (np.max(coords[:,1]) >= 10 or np.min(coords[:,1]) < 0)):
                     if not np.all(board[coords[:,0], coords[:,1]] == 0):
@@ -269,8 +271,8 @@ if __name__ == "__main__":
 
         #점수에 따른 속도 차이구현
         if 10<= score < 20:
-            SPEED = 3
-        elif 20 <= score < 40:
+            SPEED = 2
+        elif 30 <= score < 40:
             SPEED = 3
         elif 40 <= score < 60:
             SPEED = 4
