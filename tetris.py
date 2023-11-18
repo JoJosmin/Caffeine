@@ -99,7 +99,6 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     dummy = cv2.putText(dummy, "Score", (515, 200), cv2.FONT_HERSHEY_DUPLEX, 1, [0, 0, 255], 2)
     dummy = cv2.putText(dummy, str(score), (520, 240), cv2.FONT_HERSHEY_DUPLEX, 1, [0, 0, 255], 2)
     dummy = cv2.putText(dummy, str(gameover), (200, 250), cv2.FONT_HERSHEY_DUPLEX, 1.5, [0, 0, 255], 2)
-
     # Instructions for the player
 
     dummy = cv2.putText(dummy, "A - move left", (45, 200), cv2.FONT_HERSHEY_DUPLEX, 0.6, [0, 0, 255])
@@ -222,10 +221,10 @@ if __name__ == "__main__":
                         arr = np.rot90(arr ,-1)
                     coords = arr[pov[:,0], pov[:,1]]
 
-            elif key == 8 or key == 27:
+            if key == 8 or key == 27:
                 quit = True
                 break
-                
+            
             # Checks if the piece is overlapping with other pieces or if it's outside the board, and if so, changes the position to the position before anything happened
                         
             if np.max(coords[:,0]) < 20 and np.min(coords[:,0]) >= 0:
@@ -282,3 +281,4 @@ if __name__ == "__main__":
             SPEED = 5 
     dummy = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
     cv2.waitKey()
+
