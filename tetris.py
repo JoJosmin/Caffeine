@@ -155,10 +155,10 @@ if __name__ == "__main__":
                 break
             imgS = cv2.resize(img, (0, 0), None, resize_rate, resize_rate)
             results = yolo_process(imgS)
-    
+
             eye_list = []
             iris_list = []
-    
+
             for result in results:
                 xmin_resize = int(result['xmin'] / resize_rate)
                 ymin_resize = int(result['ymin'] / resize_rate)
@@ -198,10 +198,9 @@ if __name__ == "__main__":
                     if current_piece == "I":
                         top_left[1] += 1
                         
-            elif key == ord("l"):
+            elif iris_status =="Blink":
                 # Rotation mechanism
                 # arr is the array of nearby points which get rotated and pov is the indexes of the blocks within arr
-                
                 if current_piece != "I" and current_piece != "O":
                     if coords[1,1] > 0 and coords[1,1] < 9:
                         arr = coords[1] - 1 + np.array([[[x, y] for y in range(3)] for x in range(3)])
