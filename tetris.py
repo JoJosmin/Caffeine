@@ -1,3 +1,4 @@
+from iris_status import get_iris_status
 import cv2
 import numpy as np
 from random import choice
