@@ -6,9 +6,8 @@ import numpy as np
 from random import choice
 import tkinter as tk
 
-SPEED = 1 #스피드 조절 변수
+SPEED = 3 #스피드 조절 변수
 
-# Make a board
 def yolo_process(img):
     yolo_results = model(img)
     df = yolo_results.pandas().xyxy[0]
@@ -31,6 +30,8 @@ def yolo_process(img):
         obj_list.append(obj_dict)
     return obj_list
 
+# 변수 선언
+
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='./best_epoch150.pt')
 model.conf = 0.3
 model.iou = 0
@@ -39,8 +40,6 @@ iris_x_threshold, iris_y_threshold = 0.10, 0.20
 cap = cv2.VideoCapture(0)
 iris_status = 'Center'
 board = np.uint8(np.zeros([20, 10, 3]))
-
-# Initialize some variables
 
 quit = False
 place = False
@@ -78,9 +77,8 @@ def get_info(piece):
 
     return coords, color
 
-
+#보드 생성 
 def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
-    # Generates the display
 
     border = np.uint8(np.array([163, 49, 12]) * np.ones([20, 1, 3])) 
     border_ = np.uint8(np.array([163, 49, 12]) * np.ones([1, 34, 3]))  
@@ -89,7 +87,7 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     dummy[coords[:,0], coords[:,1]] = color
 
     right = np.uint8(np.zeros([20, 10, 3]))
-    right[next_info[0][:,0] + 2, next_info[0][:,1]] = next_info[1]
+    right[next_info[0][:,0] + 9, next_info[0][:,1]] = next_info[1]
     left = np.uint8(np.zeros([20, 10, 3]))
     left[held_info[0][:,0] + 2, held_info[0][:,1]] = held_info[1]
 
@@ -97,20 +95,18 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
 
     dummy = np.concatenate((border, left, border, dummy, border, right, border), 1)
     dummy = np.concatenate((border_, dummy, border_), 0)
-    dummy = dummy.repeat(20, 0).repeat(20, 1)
-    dummy = cv2.putText(dummy, "Score", (515, 200), font, 1, [255, 102, 51], 2)
-    dummy = cv2.putText(dummy, str(score), (520, 240), font, 1, [255, 102, 51], 2)
+    dummy = dummy.repeat(20, 0).repeat(20, 1)   
+    dummy = cv2.putText(dummy, "Score", (515, 330), font, 1, [255, 204, 153], 2)
+    dummy = cv2.putText(dummy, str(score), (520, 370), font, 1, [255, 204, 153], 2)
     dummy = cv2.putText(dummy, str(gameover), (200, 250), font, 1.5, [0, 0, 255], 3)
 
     dummy = cv2.putText(dummy, "<<", (40, 140), font, 1, [255, 102, 51], 5)
     dummy = cv2.putText(dummy, ">>", (590, 140), font, 1, [255, 102, 51], 5)
 
-    # Instructions for the player
-
-    dummy = cv2.putText(dummy, "look left - move left", (45, 200), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "look right - move right", (45, 225), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "blink - rotate right", (45, 250), font, 0.4, [255, 204, 153])
-    dummy = cv2.putText(dummy, "BackSpace - quit", (45, 275), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "Look Left - Move Left", (45, 300), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "Look Right - Move Right", (45, 325), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "Blink - Rotate Right", (45, 350), font, 0.4, [255, 204, 153])
+    dummy = cv2.putText(dummy, "BackSpace - Quit", (45, 375), font, 0.4, [255, 204, 153])
 
     cv2.namedWindow("Tetris", cv2.WINDOW_NORMAL)
 
@@ -125,20 +121,16 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
 if __name__ == "__main__":
     while not quit:
         
-        # Check if user wants to swap held and current pieces
         if switch:
-           # swap held_piece and current_piece
             held_piece, current_piece = current_piece, held_piece
             switch = False
         else:
-            # Generates the next piece and updates the current piece
             current_piece = next_piece
             next_piece = choice(["I", "T", "L", "J", "Z", "S", "O"])
         
         if flag > 0:
             flag -= 1
         
-        # Determines the color and position of the current, next, and held pieces
         if held_piece == "":
             held_info = np.array([[0, 0]]), [0, 0, 0]
         else:
@@ -150,11 +142,14 @@ if __name__ == "__main__":
         if current_piece == "I":
             top_left = [-2, 3]
 
+        #화면을 벗어날 정도로 블럭이 높게 쌓이면 Game over
         if not np.all(board[coords[:,0], coords[:,1]] == 0):
             gameover = "Game over"
             break
             
         while True:
+
+            #시선을 입력받기 위한 설정
             ret, img = cap.read()
             if not ret == True:
                 break
@@ -183,43 +178,40 @@ if __name__ == "__main__":
                 elif result['class'] == 'iris':
                     iris_list.append(result)
             iris_status = get_iris_status(eye_list, iris_list, iris_x_threshold, iris_y_threshold)
-            # Shows the board and gets the key press
+            #보드를 생성 후 키보드 입력을 기다림
             key = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
-            # Create a copy of the position
             dummy = coords.copy()
             
         
             if iris_status =="Left":
-                # Moves the piece left if it isn't against the left wall
+                # 왼쪽을 응시하면 블럭이 왼쪽으로 이동(왼쪽 벽을 만나면 더이상 왼쪽으로 가지 않음)
                 if np.min(coords[:,1]) > 0:
                     coords[:,1] -= 1
                 if current_piece == "I":
                     top_left[1] -= 1
                     
             elif iris_status =="Right":
-                # Moves the piece right if it isn't against the right wall
+                # 오른쪽을 응시하면 블럭이 오른쪽으로 이동(오른쪽 벽을 만나면 더이상 오른쪽으로 가지 않음)
                 if np.max(coords[:,1]) < 9:
                     coords[:,1] += 1
                     if current_piece == "I":
                         top_left[1] += 1
                         
             elif iris_status =="Blink":
-                # Rotation mechanism
-                # arr is the array of nearby points which get rotated and pov is the indexes of the blocks within arr
-                
+                #눈을 깜빡이면 블럭이 시계방향으로 회전
+                #저장되어 있는 회전 모습 array 사용
                 if current_piece != "I" and current_piece != "O":
+                    # 일자 블럭과, 정사각형 블럭의 경우 따로 처리 (회전 시 모양이 2개로 한정되어있기 때문)
                     if coords[1,1] > 0 and coords[1,1] < 9:
                         arr = coords[1] - 1 + np.array([[[x, y] for y in range(3)] for x in range(3)])
                         pov = coords - coords[1] + 1
                     
                 elif current_piece == "I":
-                    # The straight piece has a 4x4 array, so it needs seperate code
                     
                     arr = top_left + np.array([[[x, y] for y in range(4)] for x in range(4)])
                     pov = np.array([np.where(np.logical_and(arr[:,:,0] == pos[0], arr[:,:,1] == pos[1])) for pos in coords])
                     pov = np.array([k[0] for k in np.swapaxes(pov, 1, 2)])
             
-                # Rotates the array and repositions the piece to where it is now
                 
                 if current_piece != "O":
                     if key == ord("l"):
@@ -227,13 +219,13 @@ if __name__ == "__main__":
                     else:
                         arr = np.rot90(arr ,-1)
                     coords = arr[pov[:,0], pov[:,1]]
-
+            
+            # cv2.putText(img, 'Iris Direction: {}'.format(iris_status),(10, 40), cv2.FONT_HERSHEY_COMPLEX, 1, (30, 30, 30), 2)
+            # cv2.imshow('img', img)
             if key == 8 or key == 27:
                 quit = True
                 break
-                
-            # Checks if the piece is overlapping with other pieces or if it's outside the board, and if so, changes the position to the position before anything happened
-                        
+     
             if np.max(coords[:,0]) < 20 and np.min(coords[:,0]) >= 0:
                 if not (current_piece == "I" and (np.max(coords[:,1]) >= 10 or np.min(coords[:,1]) < 0)):
                     if not np.all(board[coords[:,0], coords[:,1]] == 0):
@@ -252,22 +244,19 @@ if __name__ == "__main__":
                 place = True
                 
             if place:
-                # Places the piece where it is on the board
+                #바닥을 만날경우 더이상 진행되지 않고 블럭이 고정되게 함
                 for pos in coords:
                     board[tuple(pos)] = color
                     
-                # Resets place to False
                 place = False
                 break
 
-            # Moves down by 1
-
+            #바닥을 만나지 않을 경우 1라인씩 내려감
             coords[:,0] += 1
             if current_piece == "I":
                 top_left[0] += 1
         
-        # Clears lines and also counts how many lines have been cleared and updates the score
-    
+        #한 행이 꽉 차면 사라지면서 score 10추가
         lines = 0
                 
         for line in range(20):
@@ -278,8 +267,9 @@ if __name__ == "__main__":
         if lines >= 1:
             score += lines*10
 
+        #점수에 따른 속도 차이구현
         if 10<= score < 20:
-            SPEED = 2
+            SPEED = 3
         elif 20 <= score < 40:
             SPEED = 3
         elif 40 <= score < 60:
