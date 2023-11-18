@@ -24,7 +24,7 @@ def yolo_process(img):
         obj_list.append(obj_dict)
     return obj_list
 
-model = torch.hub.load('ultralytics/yolov5', 'custom', path = './best_1000.pt')
+model = torch.hub.load('ultralytics/yolov5', 'custom', path = './best_150.pt')
 model.conf = 0.3
 model.iou = 0
 resize_rate = 1
