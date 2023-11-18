@@ -38,5 +38,5 @@ def get_iris_status(eye_list, iris_list, iris_x_threshold, iris_y_threshold):
         #     return 'Down'
         else:
             return 'Center'
-    elif len(eye_list) == 2 and len(iris_list) == 0:
+    else:
         return 'Blink'
