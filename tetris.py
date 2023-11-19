@@ -272,7 +272,7 @@ if __name__ == "__main__":
         #점수에 따른 속도 차이구현
         if 10<= score < 20:
             SPEED = 2
-        elif 30 <= score < 40:
+        elif 20 <= score < 40:
             SPEED = 3
         elif 40 <= score < 60:
             SPEED = 4
