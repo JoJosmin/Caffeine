@@ -48,6 +48,7 @@ held_piece = ""
 flag = 0
 score = 0
 gameover = ""
+navigate = ""
 
 # 테트리스 블럭 구현
 next_piece = choice(["O", "I", "S", "Z", "L", "J", "T"])
@@ -78,7 +79,7 @@ def get_info(piece):
     return coords, color
 
 #보드 생성 
-def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
+def display(board, coords, color, next_info, held_info, score, SPEED, gameover, navigate):
 
     border = np.uint8(np.array([163, 49, 12]) * np.ones([20, 1, 3])) 
     border_ = np.uint8(np.array([163, 49, 12]) * np.ones([1, 34, 3]))  
@@ -99,6 +100,7 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover):
     dummy = cv2.putText(dummy, "Score", (515, 330), font, 1, [255, 204, 153], 2)
     dummy = cv2.putText(dummy, str(score), (520, 370), font, 1, [255, 204, 153], 2)
     dummy = cv2.putText(dummy, str(gameover), (200, 250), font, 1.5, [0, 0, 255], 3)
+    dummy = cv2.putText(dummy, str(navigate), (50, 290), font, 1.5, [0, 0, 255], 3)
 
     dummy = cv2.putText(dummy, "<<", (40, 140), font, 1, [255, 102, 51], 5)
     dummy = cv2.putText(dummy, ">>", (590, 140), font, 1, [255, 102, 51], 5)
@@ -147,7 +149,26 @@ if __name__ == "__main__":
         #화면을 벗어날 정도로 블럭이 높게 쌓이면 Game over
         if not np.all(board[coords[:,0], coords[:,1]] == 0):
             gameover = "Game over"
-            break
+            navigate="Press any key to restart"
+            key = display(board, coords, color, next_info, held_info, score, SPEED, gameover, navigate)
+            # game over가 된 후, 아무 키보드의 입력이 들어오면 게임이 재시작하게 구현
+            while True:
+                if key != -1 and key != 8:
+                    break
+                key = display(board, coords, color, next_info, held_info, score, SPEED, gameover, navigate)
+
+            # 게임 재시작을 위해 변수 초기화
+            board = np.zeros((20, 10, 3), dtype=np.uint8)
+            coords = np.array([[0, 3], [1, 3], [2, 3], [3, 3]])
+            color = [0, 255, 255]
+            next_piece = choice(["I", "T", "L", "J", "Z", "S", "O"])
+            held_piece = ""
+            held_info = np.array([[0, 0]]), [0, 0, 0]
+            score = 0
+            SPEED = 1
+            gameover = ""
+            navigate = ""
+            continue
             
         while True:
 
@@ -181,7 +202,7 @@ if __name__ == "__main__":
                     iris_list.append(result)
             iris_status = get_iris_status(eye_list, iris_list, iris_x_threshold, iris_y_threshold)
             #보드를 생성 후 키보드 입력을 기다림
-            key = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
+            key = display(board, coords, color, next_info, held_info, score, SPEED, gameover, navigate)
             dummy = coords.copy()
             
         
@@ -278,5 +299,6 @@ if __name__ == "__main__":
             SPEED = 4
         elif score >= 60:
             SPEED = 5 
-    dummy = display(board, coords, color, next_info, held_info, score, SPEED, gameover)
+    dummy = display(board, coords, color, next_info, held_info, score, SPEED, gameover, navigate)
     cv2.waitKey()
+    
