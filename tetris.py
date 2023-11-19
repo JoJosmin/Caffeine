@@ -105,8 +105,6 @@ def display(board, coords, color, next_info, held_info, score, SPEED, gameover, 
     dummy = cv2.putText(dummy, "<<", (40, 140), font, 1, [255, 102, 51], 5)
     dummy = cv2.putText(dummy, ">>", (590, 140), font, 1, [255, 102, 51], 5)
 
-    # Instructions for the player
-
     dummy = cv2.putText(dummy, "look left - move left", (45, 200), font, 0.4, [255, 204, 153])
     dummy = cv2.putText(dummy, "look right - move right", (45, 225), font, 0.4, [255, 204, 153])
     dummy = cv2.putText(dummy, "blink - rotate right", (45, 250), font, 0.4, [255, 204, 153])
